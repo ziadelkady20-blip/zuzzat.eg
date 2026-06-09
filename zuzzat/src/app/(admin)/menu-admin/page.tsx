@@ -3,6 +3,7 @@ import { useState } from "react";
 import { MENU_ITEMS } from "@/lib/data";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
+import ToggleSwitch from "@/components/ui/ToggleSwitch";
 
 export default function MenuPage() {
   const [items, setItems] = useState(MENU_ITEMS);
@@ -26,12 +27,7 @@ export default function MenuPage() {
                 <td className="px-4 py-3"><Badge variant="blue">{item.category}</Badge></td>
                 <td className="px-4 py-3 font-bold">{item.price} EGP</td>
                 <td className="px-4 py-3">
-                  <label className="relative inline-block w-10 h-5 cursor-pointer">
-                    <input type="checkbox" className="sr-only" checked={item.available} onChange={() => toggle(item.id)} />
-                    <div className={`w-10 h-5 rounded-full transition-colors ${item.available ? "bg-[#1E3ABA]" : "bg-gray-200"}`}>
-                      <div className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform ${item.available ? "translate-x-5" : "translate-x-0.5"}`} />
-                    </div>
-                  </label>
+                  <ToggleSwitch checked={item.available} onChange={() => toggle(item.id)} />
                 </td>
                 <td className="px-4 py-3"><Button variant="outline" size="sm">Edit</Button></td>
               </tr>

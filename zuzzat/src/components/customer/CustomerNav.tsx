@@ -3,6 +3,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import ZuzzatLogo from "@/components/ui/ZuzzatLogo";
 
 const LINKS = [
   { href: "/home", label: "Home" },
@@ -21,13 +22,7 @@ export default function CustomerNav() {
     <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-gray-100 shadow-sm">
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
         <Link href="/home" className="flex items-center gap-2.5">
-          <svg width="36" height="36" viewBox="0 0 110 110" fill="none">
-            <circle cx="55" cy="50" r="36" fill="#EEF1FF" stroke="#1E3ABA" strokeWidth="2.5"/>
-            <ellipse cx="55" cy="51" rx="17" ry="19" fill="white" stroke="#1E3ABA" strokeWidth="2"/>
-            <circle cx="48" cy="49" r="2.8" fill="#1E3ABA"/><circle cx="62" cy="49" r="2.8" fill="#1E3ABA"/>
-            <path d="M48 57 Q55 65 62 57" stroke="#1E3ABA" strokeWidth="2" fill="none" strokeLinecap="round"/>
-            <path d="M35 23 Q55 8 75 23 L73 34 Q55 24 37 34Z" fill="#1E3ABA"/>
-          </svg>
+          <ZuzzatLogo size={36} />
           <span className="font-black text-xl text-[#1E3ABA]" style={{ fontFamily:"'Outfit',sans-serif" }}>ZUZZAT</span>
         </Link>
 

@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { ROLE_HOME_PATHS } from "@/lib/constants";
 
 export default function IntroPage() {
   const [stage, setStage] = useState(0);
@@ -15,12 +16,7 @@ export default function IntroPage() {
     const t5 = setTimeout(() => {
       const role = typeof window !== "undefined" ? localStorage.getItem("zuzzat_role") : null;
       if (role) {
-        const paths: Record<string, string> = {
-          superadmin: "/dashboard", admin: "/dashboard",
-          cashier: "/pos", kitchen: "/kds",
-          inventory: "/inventory", customer: "/home",
-        };
-        router.push(paths[role] ?? "/login");
+        router.push((ROLE_HOME_PATHS as Record<string, string>)[role] ?? "/login");
       } else {
         router.push("/login");
       }

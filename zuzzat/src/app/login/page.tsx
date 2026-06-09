@@ -5,12 +5,8 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { loginUser } from "@/lib/firebase/auth";
 import { Role } from "@/types";
-
-const ROLE_HOME: Record<Role, string> = {
-  superadmin: "/dashboard", admin: "/dashboard",
-  cashier: "/pos", kitchen: "/kds",
-  inventory: "/inventory", customer: "/home",
-};
+import { ROLE_HOME_PATHS } from "@/lib/constants";
+import ZuzzatLogo from "@/components/ui/ZuzzatLogo";
 
 // Demo credentials for testing without Firebase
 const DEMO_USERS: Record<string, { password: string; role: Role; name: string }> = {
@@ -38,12 +34,12 @@ export default function LoginPage() {
           localStorage.setItem("zuzzat_role", demo.role);
           localStorage.setItem("zuzzat_name", demo.name);
         }
-        router.push(ROLE_HOME[demo.role]);
+        router.push(ROLE_HOME_PATHS[demo.role]);
         return;
       }
       // Try Firebase
       const { role } = await loginUser(email, password);
-      router.push(ROLE_HOME[role]);
+      router.push(ROLE_HOME_PATHS[role]);
     } catch (err: any) {
       setError("Invalid email or password");
     } finally {
@@ -57,13 +53,7 @@ export default function LoginPage() {
       <div className="hidden lg:flex flex-col justify-between w-[420px] flex-shrink-0 p-10" style={{ background: "#1E3ABA" }}>
         <div>
           <div className="flex items-center gap-3 mb-16">
-            <svg width="44" height="44" viewBox="0 0 110 110" fill="none">
-              <circle cx="55" cy="50" r="36" fill="rgba(255,255,255,0.2)" stroke="white" strokeWidth="2"/>
-              <ellipse cx="55" cy="51" rx="17" ry="19" fill="white"/>
-              <circle cx="48" cy="49" r="2.8" fill="#1E3ABA"/><circle cx="62" cy="49" r="2.8" fill="#1E3ABA"/>
-              <path d="M48 57 Q55 65 62 57" stroke="#1E3ABA" strokeWidth="2" fill="none" strokeLinecap="round"/>
-              <path d="M35 23 Q55 8 75 23 L73 34 Q55 24 37 34Z" fill="rgba(255,255,255,0.85)"/>
-            </svg>
+            <ZuzzatLogo size={44} variant="white" />
             <div>
               <div className="text-white font-black text-2xl tracking-tight" style={{ fontFamily: "'Outfit', sans-serif" }}>ZUZZAT</div>
               <div className="text-white/50 text-xs">Coffee Shop Platform</div>
@@ -92,12 +82,7 @@ export default function LoginPage() {
       <div className="flex-1 flex items-center justify-center p-8 bg-gray-50">
         <motion.div className="w-full max-w-sm" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <div className="lg:hidden flex items-center gap-2 mb-8 justify-center">
-            <svg width="36" height="36" viewBox="0 0 110 110" fill="none">
-              <circle cx="55" cy="50" r="36" fill="#EEF1FF" stroke="#1E3ABA" strokeWidth="2.5"/>
-              <ellipse cx="55" cy="51" rx="17" ry="19" fill="white" stroke="#1E3ABA" strokeWidth="2"/>
-              <circle cx="48" cy="49" r="2.8" fill="#1E3ABA"/><circle cx="62" cy="49" r="2.8" fill="#1E3ABA"/>
-              <path d="M48 57 Q55 65 62 57" stroke="#1E3ABA" strokeWidth="2" fill="none" strokeLinecap="round"/>
-            </svg>
+            <ZuzzatLogo size={36} />
             <span className="font-black text-2xl text-[#1E3ABA]" style={{ fontFamily: "'Outfit',sans-serif" }}>ZUZZAT</span>
           </div>
           <h1 className="text-2xl font-bold text-gray-800 mb-1">Sign in</h1>

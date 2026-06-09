@@ -1,7 +1,9 @@
 "use client";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MENU_ITEMS, CATEGORIES, PROMO_CODES } from "@/lib/data";
+import { MENU_ITEMS, CATEGORIES } from "@/lib/data";
+import { calculateDiscount } from "@/lib/promo";
+import ZuzzatLogo from "@/components/ui/ZuzzatLogo";
 import { use } from "react";
 
 interface CartItem { id: string; name: string; price: number; emoji: string; qty: number; }
@@ -31,16 +33,12 @@ export default function QROrderPage({ params }: { params: Promise<{ tableId: str
   };
 
   const subtotal = cart.reduce((a, c) => a + c.price * c.qty, 0);
-  const discount = promoInput.toUpperCase() in PROMO_CODES
-    ? PROMO_CODES[promoInput.toUpperCase()].type === "percent"
-      ? Math.round(subtotal * PROMO_CODES[promoInput.toUpperCase()].value)
-      : Math.min(PROMO_CODES[promoInput.toUpperCase()].value, subtotal)
-    : 0;
+  const discount = calculateDiscount(promoInput, subtotal);
   const total = subtotal - discount;
   const totalItems = cart.reduce((a,c) => a+c.qty, 0);
 
   const applyPromo = () => {
-    if (promoInput.toUpperCase() in PROMO_CODES) { setPromoDiscount(discount); setPromoMsg("✅ Promo applied!"); }
+    if (discount > 0) { setPromoDiscount(discount); setPromoMsg("✅ Promo applied!"); }
     else { setPromoDiscount(0); setPromoMsg("❌ Invalid code"); }
   };
 
@@ -71,12 +69,7 @@ export default function QROrderPage({ params }: { params: Promise<{ tableId: str
       <div className="sticky top-0 z-50 text-white shadow-md" style={{ background:"#1E3ABA" }}>
         <div className="max-w-lg mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <svg width="30" height="30" viewBox="0 0 110 110" fill="none">
-              <circle cx="55" cy="50" r="36" fill="rgba(255,255,255,0.2)" stroke="white" strokeWidth="2"/>
-              <ellipse cx="55" cy="51" rx="17" ry="19" fill="white"/>
-              <circle cx="48" cy="49" r="2.8" fill="#1E3ABA"/><circle cx="62" cy="49" r="2.8" fill="#1E3ABA"/>
-              <path d="M48 57 Q55 65 62 57" stroke="#1E3ABA" strokeWidth="2" fill="none" strokeLinecap="round"/>
-            </svg>
+            <ZuzzatLogo size={30} variant="white" />
             <div>
               <div className="font-black text-lg" style={{ fontFamily:"'Outfit',sans-serif" }}>ZUZZAT</div>
               <div className="text-white/60 text-xs">Table {tableId}</div>
