@@ -13,17 +13,7 @@ export default function IntroPage() {
     const t3 = setTimeout(() => setStage(3), 1500);
     const t4 = setTimeout(() => setStage(4), 1900);
     const t5 = setTimeout(() => {
-      const role = typeof window !== "undefined" ? localStorage.getItem("zuzzat_role") : null;
-      if (role) {
-        const paths: Record<string, string> = {
-          superadmin: "/dashboard", admin: "/dashboard",
-          cashier: "/pos", kitchen: "/kds",
-          inventory: "/inventory", customer: "/home",
-        };
-        router.push(paths[role] ?? "/login");
-      } else {
-        router.push("/login");
-      }
+      router.push("/login");
     }, 3000);
     return () => [t1, t2, t3, t4, t5].forEach(clearTimeout);
   }, [router]);

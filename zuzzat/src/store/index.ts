@@ -20,7 +20,7 @@ interface AppState {
 }
 
 export const useStore = create<AppState>((set) => ({
-  role: "superadmin",
+  role: "customer",
   setRole: (role) => set({ role }),
   cart: [],
   addToCart: (item) =>
