@@ -3,7 +3,10 @@ import { Order } from "@/types";
 
 export function printReceipt(order: Order, shopName = "ZUZZAT Coffee Shop") {
   const w = window.open("", "_blank", "width=400,height=600");
-  if (!w) return;
+  if (!w) {
+    alert("Unable to open print window. Please allow popups for this site and try again.");
+    return;
+  }
   const date = new Date(order.createdAt).toLocaleString("en-EG");
   const html = `
     <!DOCTYPE html><html><head>

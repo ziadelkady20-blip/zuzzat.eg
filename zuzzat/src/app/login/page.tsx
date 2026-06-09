@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { loginUser } from "@/lib/firebase/auth";
+import { loginUser, getAuthErrorMessage } from "@/lib/firebase/auth";
 import { Role } from "@/types";
 
 const ROLE_HOME: Record<Role, string> = {
@@ -44,8 +44,8 @@ export default function LoginPage() {
       // Try Firebase
       const { role } = await loginUser(email, password);
       router.push(ROLE_HOME[role]);
-    } catch (err: any) {
-      setError("Invalid email or password");
+    } catch (err: unknown) {
+      setError(getAuthErrorMessage(err));
     } finally {
       setLoading(false);
     }

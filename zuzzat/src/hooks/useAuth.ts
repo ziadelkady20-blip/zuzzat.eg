@@ -8,13 +8,21 @@ export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
   const [role, setRole] = useState<Role>("customer");
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const unsub = onAuthChange(async (u) => {
       setUser(u);
+      setError(null);
       if (u) {
-        const r = await getUserRole(u.uid);
-        setRole(r);
+        try {
+          const r = await getUserRole(u.uid);
+          setRole(r);
+        } catch (err) {
+          console.error("[useAuth] Failed to fetch user role:", err);
+          setRole("customer");
+          setError("Failed to load user role. Using default permissions.");
+        }
       } else {
         setRole("customer");
       }
@@ -23,5 +31,5 @@ export function useAuth() {
     return () => unsub();
   }, []);
 
-  return { user, role, loading };
+  return { user, role, loading, error };
 }

@@ -10,7 +10,14 @@ const OFFERS = [
 ];
 
 export default function OffersPage() {
-  const copy = (code: string) => { navigator.clipboard?.writeText(code); alert(`✅ Code "${code}" copied!`); };
+  const copy = async (code: string) => {
+    try {
+      await navigator.clipboard.writeText(code);
+      alert(`Code "${code}" copied!`);
+    } catch {
+      alert(`Copy this code manually: ${code}`);
+    }
+  };
   return (
     <div className="max-w-4xl mx-auto px-6 py-16" style={{ fontFamily:"'Poppins',sans-serif" }}>
       <div className="text-center mb-12">

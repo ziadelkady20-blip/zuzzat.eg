@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { registerCustomer } from "@/lib/firebase/auth";
+import { registerCustomer, getAuthErrorMessage } from "@/lib/firebase/auth";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -20,8 +20,8 @@ export default function RegisterPage() {
     try {
       await registerCustomer(form.name, form.email, form.password, form.phone);
       router.push("/home");
-    } catch (err: any) {
-      setError(err.message ?? "Registration failed");
+    } catch (err: unknown) {
+      setError(getAuthErrorMessage(err));
     } finally {
       setLoading(false);
     }
