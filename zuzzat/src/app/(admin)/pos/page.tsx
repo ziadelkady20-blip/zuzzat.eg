@@ -1,7 +1,8 @@
 "use client";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { MENU_ITEMS, CATEGORIES, PROMO_CODES } from "@/lib/data";
+import { MENU_ITEMS, CATEGORIES } from "@/lib/data";
+import { calculateDiscount } from "@/lib/promo";
 import { useStore } from "@/store";
 import Button from "@/components/ui/Button";
 
@@ -22,16 +23,11 @@ export default function POSPage() {
   );
 
   const subtotal = cart.reduce((a, c) => a + c.price * c.qty, 0);
-  const discountAmt = promoInput.toUpperCase() in PROMO_CODES
-    ? PROMO_CODES[promoInput.toUpperCase()].type === "percent"
-      ? Math.round(subtotal * PROMO_CODES[promoInput.toUpperCase()].value)
-      : PROMO_CODES[promoInput.toUpperCase()].value
-    : 0;
+  const discountAmt = calculateDiscount(promoInput, subtotal);
   const total = subtotal - discountAmt;
 
   const applyPromo = () => {
-    const code = promoInput.toUpperCase();
-    if (code in PROMO_CODES) { setPromoDiscount(discountAmt); setPromoMsg("✅ Promo applied!"); }
+    if (discountAmt > 0) { setPromoDiscount(discountAmt); setPromoMsg("✅ Promo applied!"); }
     else { setPromoDiscount(0); setPromoMsg("❌ Invalid code"); }
   };
 

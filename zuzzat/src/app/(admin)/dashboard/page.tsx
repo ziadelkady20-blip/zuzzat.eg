@@ -1,6 +1,8 @@
 "use client";
 import { motion } from "framer-motion";
 import StatCard from "@/components/ui/StatCard";
+import ProgressBar from "@/components/ui/ProgressBar";
+import { TABLE_STATUS_STYLES } from "@/lib/constants";
 
 const bestSellers = [
   { name: "Ice Matcha Latte", count: 34, pct: 82, color: "#A4B55A", emoji: "🍵" },
@@ -54,9 +56,7 @@ export default function DashboardPage() {
                 <span className="text-lg">{item.emoji}</span>
                 <div className="flex-1">
                   <p className="text-xs font-semibold mb-1">{item.name}</p>
-                  <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                    <div className="h-full rounded-full" style={{ width: `${item.pct}%`, background: item.color }} />
-                  </div>
+                  <ProgressBar percent={item.pct} color={item.color} />
                 </div>
                 <span className="text-sm font-bold text-gray-800">{item.count}</span>
               </div>
@@ -71,7 +71,7 @@ export default function DashboardPage() {
           {[{l:"💵 Cash",v:8240,pct:64,c:"#A4B55A"},{l:"📱 Vodafone Cash",v:3100,pct:24,c:"#FF6B6B"},{l:"💳 Instapay",v:1500,pct:12,c:"#1E3ABA"}].map((p)=>(
             <div key={p.l} className="mb-3">
               <div className="flex justify-between text-xs mb-1"><span>{p.l}</span><span className="font-bold">{p.v.toLocaleString()} EGP</span></div>
-              <div className="h-1.5 bg-gray-100 rounded-full"><div className="h-full rounded-full" style={{width:`${p.pct}%`,background:p.c}}/></div>
+              <ProgressBar percent={p.pct} color={p.c} />
             </div>
           ))}
         </div>
@@ -80,8 +80,7 @@ export default function DashboardPage() {
           <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-3">Active Tables</p>
           <div className="grid grid-cols-5 gap-1.5 mb-3">
             {tableStatuses.map((s, i) => {
-              const colors: Record<string, string> = { available: "bg-green-50 text-green-700 border-green-200", occupied: "bg-red-50 text-red-500 border-red-200", reserved: "bg-orange-50 text-orange-600 border-orange-200", pickup: "bg-[#EEF1FF] text-[#1E3ABA] border-[#C7CFFE]" };
-              return <div key={i} className={`aspect-square rounded-lg border flex items-center justify-center text-[11px] font-bold cursor-pointer ${colors[s]}`}>{i < 13 ? i + 1 : `P${i - 12}`}</div>;
+              return <div key={i} className={`aspect-square rounded-lg border flex items-center justify-center text-[11px] font-bold cursor-pointer ${TABLE_STATUS_STYLES[s]}`}>{i < 13 ? i + 1 : `P${i - 12}`}</div>;
             })}
           </div>
           <div className="flex flex-wrap gap-1.5">

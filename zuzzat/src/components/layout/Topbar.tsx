@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useStore } from "@/store";
 import { Role } from "@/types";
+import ZuzzatLogo from "@/components/ui/ZuzzatLogo";
 
 const ROLES: { label: string; value: Role; icon: string }[] = [
   { label: "Super Admin", value: "superadmin", icon: "👑" },
@@ -21,14 +22,7 @@ export default function Topbar() {
   return (
     <header className="h-14 flex items-center px-5 gap-4 flex-shrink-0 shadow-md relative z-50" style={{ background: "#1E3ABA" }}>
       <div className="flex items-center gap-2.5">
-        <svg width="32" height="32" viewBox="0 0 110 110" fill="none">
-          <circle cx="55" cy="50" r="36" fill="rgba(255,255,255,0.2)" stroke="white" strokeWidth="2" />
-          <ellipse cx="55" cy="51" rx="17" ry="19" fill="white" />
-          <circle cx="48" cy="49" r="2.8" fill="#1E3ABA" />
-          <circle cx="62" cy="49" r="2.8" fill="#1E3ABA" />
-          <path d="M48 57 Q55 65 62 57" stroke="#1E3ABA" strokeWidth="2" fill="none" strokeLinecap="round" />
-          <path d="M35 23 Q55 8 75 23 L73 34 Q55 24 37 34Z" fill="rgba(255,255,255,0.85)" />
-        </svg>
+        <ZuzzatLogo size={32} variant="white" />
         <span className="font-outfit font-black text-white text-2xl tracking-tight">ZUZZAT</span>
         <span className="text-white/40 text-xs font-normal">Platform</span>
       </div>

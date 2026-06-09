@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Button from "@/components/ui/Button";
+import ToggleSwitch from "@/components/ui/ToggleSwitch";
 
 export default function SettingsPage() {
   const [form, setForm] = useState({ name:"ZUZZAT Coffee Shop", tagline:"Stay Cool, Drink Better", address:"123 Tahrir Square, Cairo", phone:"010-ZUZZAT-01" });
@@ -44,12 +45,7 @@ export default function SettingsPage() {
             {[{l:"New order sound alert",k:"orderSound"},{l:"Low stock alerts",k:"lowStock"},{l:"Delivery updates",k:"delivery"},{l:"Promo expiry alerts",k:"promoExpiry"}].map(n=>(
               <div key={n.k} className="flex justify-between items-center py-2.5 border-b border-gray-50 last:border-0">
                 <span className="text-sm">{n.l}</span>
-                <label className="relative inline-block w-10 h-5 cursor-pointer">
-                  <input type="checkbox" className="sr-only" checked={notifs[n.k as keyof typeof notifs]} onChange={()=>toggleN(n.k as any)}/>
-                  <div className={`w-10 h-5 rounded-full transition-colors ${notifs[n.k as keyof typeof notifs]?"bg-[#1E3ABA]":"bg-gray-200"}`}>
-                    <div className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform ${notifs[n.k as keyof typeof notifs]?"translate-x-5":"translate-x-0.5"}`}/>
-                  </div>
-                </label>
+                <ToggleSwitch checked={notifs[n.k as keyof typeof notifs]} onChange={()=>toggleN(n.k as any)} />
               </div>
             ))}
           </div>

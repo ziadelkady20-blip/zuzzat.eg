@@ -1,6 +1,7 @@
 "use client";
 import StatCard from "@/components/ui/StatCard";
 import Button from "@/components/ui/Button";
+import ProgressBar from "@/components/ui/ProgressBar";
 
 const weekRevenue = [7200, 9100, 6400, 10800, 8500, 12840, 9700];
 const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -49,7 +50,7 @@ export default function AnalyticsPage() {
           {categories.map(c=>(
             <div key={c.name} className="flex items-center gap-2.5 mb-3">
               <span className="w-24 text-xs text-gray-600 flex-shrink-0">{c.name}</span>
-              <div className="flex-1"><div className="h-1.5 bg-gray-100 rounded-full overflow-hidden"><div className="h-full rounded-full" style={{width:`${c.pct}%`,background:c.color}}/></div></div>
+              <div className="flex-1"><ProgressBar percent={c.pct} color={c.color} /></div>
               <span className="text-xs font-bold text-gray-700 min-w-[70px] text-right">{c.val.toLocaleString()} EGP</span>
             </div>
           ))}
