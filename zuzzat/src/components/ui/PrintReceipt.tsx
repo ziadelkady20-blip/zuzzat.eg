@@ -1,6 +1,15 @@
 "use client";
 import { Order } from "@/types";
 
+function esc(str: string): string {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 export function printReceipt(order: Order, shopName = "ZUZZAT Coffee Shop") {
   const w = window.open("", "_blank", "width=400,height=600");
   if (!w) return;
@@ -21,27 +30,27 @@ export function printReceipt(order: Order, shopName = "ZUZZAT Coffee Shop") {
     <div class="center">
       <div class="logo">ZUZZAT</div>
       <div style="font-size:10px">Stay Cool, Drink Better</div>
-      <div style="font-size:10px">☕ ${shopName}</div>
+      <div style="font-size:10px">☕ ${esc(shopName)}</div>
       <div style="font-size:10px">123 Tahrir Square, Cairo</div>
     </div>
     <div class="line"></div>
-    <div class="row"><span>Order:</span><span class="bold">#${order.orderNumber}</span></div>
-    <div class="row"><span>Date:</span><span>${date}</span></div>
-    <div class="row"><span>Type:</span><span class="bold">${order.type}</span></div>
-    ${order.tableId ? `<div class="row"><span>Table:</span><span>${order.tableId}</span></div>` : ""}
-    ${order.cashier ? `<div class="row"><span>Cashier:</span><span>${order.cashier}</span></div>` : ""}
+    <div class="row"><span>Order:</span><span class="bold">#${esc(String(order.orderNumber))}</span></div>
+    <div class="row"><span>Date:</span><span>${esc(date)}</span></div>
+    <div class="row"><span>Type:</span><span class="bold">${esc(order.type)}</span></div>
+    ${order.tableId ? `<div class="row"><span>Table:</span><span>${esc(String(order.tableId))}</span></div>` : ""}
+    ${order.cashier ? `<div class="row"><span>Cashier:</span><span>${esc(order.cashier)}</span></div>` : ""}
     <div class="line"></div>
     <div class="bold" style="margin-bottom:6px">ITEMS</div>
     ${order.items.map(i => `
-      <div class="row"><span>${i.emoji} ${i.name}</span><span></span></div>
-      <div class="row" style="padding-left:10px"><span>×${i.qty} @ ${i.price} EGP</span><span>${i.price * i.qty} EGP</span></div>
+      <div class="row"><span>${esc(i.emoji)} ${esc(i.name)}</span><span></span></div>
+      <div class="row" style="padding-left:10px"><span>×${esc(String(i.qty))} @ ${esc(String(i.price))} EGP</span><span>${esc(String(i.price * i.qty))} EGP</span></div>
     `).join("")}
     <div class="line"></div>
-    <div class="row"><span>Subtotal</span><span>${order.subtotal} EGP</span></div>
-    ${order.discount > 0 ? `<div class="row"><span>Discount ${order.promoCode ? `(${order.promoCode})` : ""}</span><span>-${order.discount} EGP</span></div>` : ""}
+    <div class="row"><span>Subtotal</span><span>${esc(String(order.subtotal))} EGP</span></div>
+    ${order.discount > 0 ? `<div class="row"><span>Discount ${order.promoCode ? `(${esc(order.promoCode)})` : ""}</span><span>-${esc(String(order.discount))} EGP</span></div>` : ""}
     <div class="line"></div>
-    <div class="row big"><span>TOTAL</span><span>${order.total} EGP</span></div>
-    <div class="row" style="margin-top:4px"><span>Payment:</span><span class="bold">${order.paymentMethod}</span></div>
+    <div class="row big"><span>TOTAL</span><span>${esc(String(order.total))} EGP</span></div>
+    <div class="row" style="margin-top:4px"><span>Payment:</span><span class="bold">${esc(order.paymentMethod)}</span></div>
     <div class="line"></div>
     <div class="center" style="margin-top:8px">
       <div>Thank you for visiting ZUZZAT! ☕</div>

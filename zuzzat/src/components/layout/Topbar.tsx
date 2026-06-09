@@ -1,22 +1,21 @@
 "use client";
 import { useState } from "react";
-import { useStore } from "@/store";
+import { useAuth } from "@/hooks/useAuth";
 import { Role } from "@/types";
 
-const ROLES: { label: string; value: Role; icon: string }[] = [
-  { label: "Super Admin", value: "superadmin", icon: "👑" },
-  { label: "Admin", value: "admin", icon: "🛠" },
-  { label: "Cashier", value: "cashier", icon: "💵" },
-  { label: "Kitchen", value: "kitchen", icon: "👨‍🍳" },
-  { label: "Inventory Manager", value: "inventory", icon: "📦" },
-  { label: "Customer", value: "customer", icon: "🧑" },
-];
+const ROLE_LABELS: Record<Role, { label: string; icon: string }> = {
+  superadmin: { label: "Super Admin", icon: "👑" },
+  admin:      { label: "Admin",       icon: "🛠" },
+  cashier:    { label: "Cashier",     icon: "💵" },
+  kitchen:    { label: "Kitchen",     icon: "👨‍🍳" },
+  inventory:  { label: "Inventory Manager", icon: "📦" },
+  customer:   { label: "Customer",    icon: "🧑" },
+};
 
 export default function Topbar() {
-  const { role, setRole } = useStore();
+  const { role } = useAuth();
   const [showNotif, setShowNotif] = useState(false);
-  const [showRoles, setShowRoles] = useState(false);
-  const currentRole = ROLES.find((r) => r.value === role);
+  const currentRole = ROLE_LABELS[role];
 
   return (
     <header className="h-14 flex items-center px-5 gap-4 flex-shrink-0 shadow-md relative z-50" style={{ background: "#1E3ABA" }}>
@@ -35,21 +34,17 @@ export default function Topbar() {
 
       <div className="ml-auto flex items-center gap-2.5">
         <button
-          onClick={() => { setShowNotif(!showNotif); setShowRoles(false); }}
+          onClick={() => setShowNotif(!showNotif)}
           className="relative w-9 h-9 rounded-full flex items-center justify-center text-white transition-colors hover:bg-white/20"
         >
           🔔
           <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#FF6B6B] rounded-full border-2 border-[#1E3ABA]" />
         </button>
 
-        <button
-          onClick={() => { setShowRoles(!showRoles); setShowNotif(false); }}
-          className="flex items-center gap-2 bg-white/15 hover:bg-white/25 rounded-full py-1 pl-2 pr-3 transition-colors"
-        >
+        <div className="flex items-center gap-2 bg-white/15 rounded-full py-1 pl-2 pr-3">
           <div className="w-6 h-6 rounded-full bg-white/30 flex items-center justify-center text-xs">{currentRole?.icon}</div>
           <span className="text-white text-sm font-medium">{currentRole?.label}</span>
-          <span className="text-white/60 text-xs">▾</span>
-        </button>
+        </div>
       </div>
 
       {/* Notifications */}
@@ -73,18 +68,6 @@ export default function Topbar() {
         </div>
       )}
 
-      {/* Role Menu */}
-      {showRoles && (
-        <div className="absolute top-16 right-4 bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden z-50 min-w-[180px]">
-          <div className="px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-gray-400 border-b border-gray-100">Switch Role</div>
-          {ROLES.map((r) => (
-            <button key={r.value} onClick={() => { setRole(r.value); setShowRoles(false); }}
-              className={`w-full flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-gray-50 transition-colors ${role === r.value ? "bg-[#EEF1FF] text-[#1E3ABA] font-semibold" : ""}`}>
-              {r.icon} {r.label}
-            </button>
-          ))}
-        </div>
-      )}
     </header>
   );
 }

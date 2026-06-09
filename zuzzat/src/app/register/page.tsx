@@ -14,14 +14,32 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const trimmedName = form.name.trim();
+    if (!trimmedName || trimmedName.length < 2 || trimmedName.length > 100) {
+      setError("Name must be between 2 and 100 characters"); return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(form.email)) {
+      setError("Please enter a valid email address"); return;
+    }
+    const phoneRegex = /^[\d\s\-+()]{7,20}$/;
+    if (form.phone && !phoneRegex.test(form.phone)) {
+      setError("Please enter a valid phone number"); return;
+    }
+    if (form.password.length < 8) {
+      setError("Password must be at least 8 characters"); return;
+    }
+    if (!/[A-Z]/.test(form.password) || !/[a-z]/.test(form.password) || !/\d/.test(form.password)) {
+      setError("Password must contain uppercase, lowercase, and a number"); return;
+    }
     if (form.password !== form.confirm) { setError("Passwords don't match"); return; }
-    if (form.password.length < 6) { setError("Password must be at least 6 characters"); return; }
     setError(""); setLoading(true);
     try {
-      await registerCustomer(form.name, form.email, form.password, form.phone);
+      await registerCustomer(trimmedName, form.email.trim(), form.password, form.phone.trim());
       router.push("/home");
-    } catch (err: any) {
-      setError(err.message ?? "Registration failed");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Registration failed";
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -50,7 +68,7 @@ export default function RegisterPage() {
             { label: "Full Name", key: "name", type: "text", placeholder: "Ahmed Mohamed" },
             { label: "Email", key: "email", type: "email", placeholder: "ahmed@gmail.com" },
             { label: "Phone", key: "phone", type: "tel", placeholder: "010-XXXX-XXXX" },
-            { label: "Password", key: "password", type: "password", placeholder: "min. 6 characters" },
+            { label: "Password", key: "password", type: "password", placeholder: "min. 8 chars, upper+lower+number" },
             { label: "Confirm Password", key: "confirm", type: "password", placeholder: "repeat password" },
           ].map(f => (
             <div key={f.key}>

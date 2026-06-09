@@ -12,13 +12,15 @@ const ROLE_HOME: Record<Role, string> = {
   inventory: "/inventory", customer: "/home",
 };
 
-// Demo credentials for testing without Firebase
-const DEMO_USERS: Record<string, { password: string; role: Role; name: string }> = {
-  "admin@zuzzat.com":     { password: "zuzzat123", role: "superadmin", name: "Super Admin" },
-  "cashier@zuzzat.com":   { password: "zuzzat123", role: "cashier",    name: "Cashier" },
-  "kitchen@zuzzat.com":   { password: "zuzzat123", role: "kitchen",    name: "Kitchen Staff" },
-  "customer@zuzzat.com":  { password: "zuzzat123", role: "customer",   name: "Customer" },
-};
+const DEMO_ENABLED = process.env.NEXT_PUBLIC_ENABLE_DEMO_LOGIN === "true";
+const DEMO_USERS: Record<string, { role: Role; name: string }> = DEMO_ENABLED
+  ? {
+      "demo-admin@zuzzat.com":    { role: "superadmin", name: "Demo Admin" },
+      "demo-cashier@zuzzat.com":  { role: "cashier",    name: "Demo Cashier" },
+      "demo-kitchen@zuzzat.com":  { role: "kitchen",    name: "Demo Kitchen" },
+      "demo-customer@zuzzat.com": { role: "customer",   name: "Demo Customer" },
+    }
+  : {};
 
 export default function LoginPage() {
   const router = useRouter();
@@ -31,20 +33,17 @@ export default function LoginPage() {
     e.preventDefault();
     setError(""); setLoading(true);
     try {
-      // Try demo login first
-      const demo = DEMO_USERS[email.toLowerCase()];
-      if (demo && demo.password === password) {
-        if (typeof window !== "undefined") {
-          localStorage.setItem("zuzzat_role", demo.role);
-          localStorage.setItem("zuzzat_name", demo.name);
+      // Demo login only when explicitly enabled via env var
+      if (DEMO_ENABLED) {
+        const demo = DEMO_USERS[email.toLowerCase()];
+        if (demo) {
+          router.push(ROLE_HOME[demo.role]);
+          return;
         }
-        router.push(ROLE_HOME[demo.role]);
-        return;
       }
-      // Try Firebase
       const { role } = await loginUser(email, password);
       router.push(ROLE_HOME[role]);
-    } catch (err: any) {
+    } catch {
       setError("Invalid email or password");
     } finally {
       setLoading(false);
@@ -74,18 +73,18 @@ export default function LoginPage() {
             <p className="text-white/60 text-sm leading-relaxed">Your all-in-one platform for orders, inventory, loyalty, and more.</p>
           </motion.div>
         </div>
-        {/* Demo accounts */}
-        <div className="bg-white/10 rounded-2xl p-5">
-          <p className="text-white/60 text-xs font-semibold uppercase tracking-wider mb-3">Demo Accounts</p>
-          {Object.entries(DEMO_USERS).map(([email, { role }]) => (
-            <button key={email} onClick={() => { setEmail(email); setPassword("zuzzat123"); }}
-              className="w-full flex items-center gap-2 py-2 text-left hover:bg-white/10 rounded-lg px-2 transition-colors">
-              <span className="text-white text-xs font-semibold">{email}</span>
-              <span className="ml-auto text-white/40 text-[10px] capitalize">{role}</span>
-            </button>
-          ))}
-          <p className="text-white/40 text-[10px] mt-2">Password: zuzzat123</p>
-        </div>
+        {DEMO_ENABLED && Object.keys(DEMO_USERS).length > 0 && (
+          <div className="bg-white/10 rounded-2xl p-5">
+            <p className="text-white/60 text-xs font-semibold uppercase tracking-wider mb-3">Demo Accounts</p>
+            {Object.entries(DEMO_USERS).map(([email, { role }]) => (
+              <button key={email} onClick={() => { setEmail(email); setPassword(""); }}
+                className="w-full flex items-center gap-2 py-2 text-left hover:bg-white/10 rounded-lg px-2 transition-colors">
+                <span className="text-white text-xs font-semibold">{email}</span>
+                <span className="ml-auto text-white/40 text-[10px] capitalize">{role}</span>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Right panel */}
